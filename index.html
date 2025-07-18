@@ -13,16 +13,34 @@
       }
 
       body {
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         font-family: Arial, sans-serif;
         text-align: center;
         margin-top: 40px;
         background-color: #121212;
+        overflow: hidden;
+      }
+
+      img {
+        width: 250px;
+        margin-bottom: 20px;
       }
 
       h1 {
         color: #ffffff;
         font-size: 24px;
       }
+
+      h2 {
+        color: #ffffff;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
       button {
         background-color: #333;
         border: 2px solid #5a5a5a;
@@ -39,6 +57,7 @@
       }
 
       #puzzle-container {
+        display: none;
         position: relative;
         width: 312px; /* 3 x (100 + 4) - 4 */
         height: 312px;
@@ -66,34 +85,44 @@
       }
 
       #stopwatch {
-        font-size: 20px;
+        display: none;
+        color: #ffffff;
+        font-size: 1rem;
         margin-top: 10px;
       }
 
-      #restartBtn {
+      #resetBtn {
         display: none;
+      }
+
+      #win-text {
+        font-size: 1rem;
+        margin-top: 10px;
+        color: lawngreen;
+      }
+
+      #countdown {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 10px;
+        color: #ffffff;
       }
     </style>
   </head>
   <body>
-    <h1>Puzzle Gambar 3x3</h1>
+    <img id="icon" src="assets/carlotta.png">
+    <h1 id="title">Puzzle Gambar 3x3</h1>
+    <h2 id="creator">Created by senzxc</h2>
     <button id="startBtn" onclick="startGame()">Mulai</button>
-    <button id="restartBtn" onclick="restartGame()">Ulangi</button>
-    <button id="resetBtn" onclick="resetToInitial()" style="display: none">
+    <button id="resetBtn" onclick="resetToInitial()">
       Reset
     </button>
-    <div id="stopwatch" style="display: none;">Waktu: 0 detik</div>
-    <div
-      id="countdown"
-      style="
-        font-size: 24px;
-        font-weight: bold;
-        margin-top: 10px;
-        color: #ffffff;
-      "
-    ></div>
+    <div id="stopwatch">Waktu: 0 detik</div>
+    <div id="countdown"></div>
 
     <div id="puzzle-container"></div>
+
+    <div id="win-text"></div>
 
     <script>
       const size = 3;
@@ -116,6 +145,12 @@
         isPlaying = false;
         document.getElementById("resetBtn").style.display = "none";
         document.getElementById("startBtn").style.display = "none";
+        document.getElementById("stopwatch").style.display = "none";
+        document.getElementById("win-text").textContent = "";
+        document.getElementById("title").style.display = "none";
+        document.getElementById("icon").style.display = "none";
+        document.getElementById("creator").style.display = "none";
+        document.getElementById("puzzle-container").style.display = "inline-block";
 
         document.getElementById("countdown").textContent = "Mulai dalam 3...";
         let countdown = 3;
@@ -140,9 +175,10 @@
               seconds++;
               updateStopwatch();
             }, 1000);
-            document.getElementById("stopwatch").style.display = "inline-block";
             document.getElementById("startBtn").style.display = "none";
-            document.getElementById("restartBtn").style.display = "none";
+            document.getElementById("title").style.display = "none";
+            document.getElementById("stopwatch").style.display = "inline-block";
+            document.getElementById("resetBtn").style.display = "inline-block";
           }
         }, 1000);
       }
@@ -157,9 +193,14 @@
         isPlaying = false;
 
         document.getElementById("startBtn").style.display = "inline-block";
-        document.getElementById("restartBtn").style.display = "none";
         document.getElementById("resetBtn").style.display = "none";
+        document.getElementById("stopwatch").style.display = "none";
+        document.getElementById("win-text").textContent = "";
         document.getElementById("countdown").textContent = "";
+        document.getElementById("title").style.display = "inline-block";
+        document.getElementById("icon").style.display = "inline-block";
+        document.getElementById("creator").style.display = "inline-block";
+        document.getElementById("puzzle-container").style.display = "none";
       }
 
       function updateStopwatch() {
@@ -277,11 +318,9 @@
         if (isSolved) {
           clearInterval(timerInterval);
           isPlaying = false;
-          document.getElementById("restartBtn").style.display = "inline-block";
-          setTimeout(
-            () => alert(`🎉 Puzzle selesai dalam ${seconds} detik!`),
-            300
-          );
+          document.getElementById("win-text").textContent =
+            "🎉 Puzzle selesai dalam " + seconds + " detik!";
+          document.getElementById("win-text").style.display = "block";
         }
       }
 
