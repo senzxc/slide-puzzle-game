@@ -1,208 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Puzzle Geser Asli</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 40px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Puzzle Geser Asli</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 40px;
+      }
 
-    #puzzle-container {
-      position: relative;
-      width: 312px; /* 3 x (100 + 4) - 4 */
-      height: 312px;
-      margin: 20px auto;
-      border: 2px solid #ccc;
-    }
+      #puzzle-container {
+        position: relative;
+        width: 312px; /* 3 x (100 + 4) - 4 */
+        height: 312px;
+        margin: 20px auto;
+        border: 2px solid #ccc;
+      }
 
-    .tile {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      background-image: url('mika.jpg');
-      background-size: 300px 300px;
-      background-repeat: no-repeat;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.25s ease;
-    }
+      .tile {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-image: url("assets/mika.jpg");
+        background-size: 300px 300px;
+        background-repeat: no-repeat;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: transform 0.25s ease;
+      }
 
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-    }
+      button {
+        padding: 10px 20px;
+        margin: 10px;
+      }
 
-    #stopwatch {
-      font-size: 20px;
-      margin-top: 10px;
-    }
+      #stopwatch {
+        font-size: 20px;
+        margin-top: 10px;
+      }
 
-    #restartBtn {
-      display: none;
-    }
-  </style>
-</head>
-<body>
+      #restartBtn {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Puzzle Geser Satu Arah</h1>
+    <button id="startBtn" onclick="startGame()">Mulai</button>
+    <button id="restartBtn" onclick="restartGame()">Ulangi</button>
+    <div id="stopwatch">Waktu: 0 detik</div>
 
-  <h1>Puzzle Geser Satu Arah</h1>
-  <button id="startBtn" onclick="startGame()">Mulai</button>
-  <button id="restartBtn" onclick="restartGame()">Ulangi</button>
-  <div id="stopwatch">Waktu: 0 detik</div>
+    <div id="puzzle-container"></div>
 
-  <div id="puzzle-container"></div>
+    <script>
+      const size = 3;
+      const tileSize = 100;
+      const gap = 4;
+      const total = size * size;
+      let tiles = [];
+      let emptyIndex = total - 1;
+      let isPlaying = false;
+      let timerInterval;
+      let seconds = 0;
+      let isReady = false;
 
-  <script>
-    const size = 3;
-    const tileSize = 100;
-    const gap = 4;
-    const total = size * size;
-    let tiles = [];
-    let emptyIndex = total - 1;
-    let isPlaying = false;
-    let timerInterval;
-    let seconds = 0;
-
-    function startGame() {
-      initTiles();
-      shuffleTiles();
-      renderTiles();
-      seconds = 0;
-      updateStopwatch();
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        seconds++;
+      function startGame() {
+        initTiles();
+        shuffleTiles();
+        renderTiles();
+        isReady = true; // aktifkan puzzle
+        seconds = 0;
         updateStopwatch();
-      }, 1000);
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          seconds++;
+          updateStopwatch();
+        }, 1000);
 
-      document.getElementById("startBtn").style.display = "none";
-      document.getElementById("restartBtn").style.display = "none";
-    }
-
-    function restartGame() {
-      startGame();
-    }
-
-    function updateStopwatch() {
-      document.getElementById("stopwatch").textContent = `Waktu: ${seconds} detik`;
-    }
-
-    function initTiles() {
-      tiles = [];
-      for (let i = 0; i < total - 1; i++) {
-        tiles.push(i + 1);
+        document.getElementById("startBtn").style.display = "none";
+        document.getElementById("restartBtn").style.display = "none";
       }
-      tiles.push(null); // posisi kosong
-      emptyIndex = total - 1;
-    }
 
-    function shuffleTiles(times = 100) {
-      for (let i = 0; i < times; i++) {
-        const movable = getMovableIndexes();
-        const rand = movable[Math.floor(Math.random() * movable.length)];
-        moveTile(rand, true);
+      function restartGame() {
+        startGame();
       }
-    }
 
-    function renderTiles() {
-      const container = document.getElementById("puzzle-container");
-      container.innerHTML = "";
+      function updateStopwatch() {
+        document.getElementById(
+          "stopwatch"
+        ).textContent = `Waktu: ${seconds} detik`;
+      }
 
-      for (let i = 0; i < tiles.length; i++) {
-        const value = tiles[i];
-        if (value === null) continue;
+      function initTiles() {
+        tiles = [];
+        for (let i = 0; i < total - 1; i++) {
+          tiles.push(i + 1);
+        }
+        tiles.push(null); // posisi kosong
+        emptyIndex = total - 1;
+      }
 
-        const tile = document.createElement("div");
-        tile.className = "tile";
-        tile.textContent = "";
-        const bgRow = Math.floor((value - 1) / size);
-        const bgCol = (value - 1) % size;
-        tile.style.backgroundPosition = `${-bgCol * tileSize}px ${-bgRow * tileSize}px`;
+      function shuffleTiles(times = 100) {
+        for (let i = 0; i < times; i++) {
+          const movable = getMovableIndexes();
+          const rand = movable[Math.floor(Math.random() * movable.length)];
+          moveTile(rand, true);
+        }
+      }
 
-        tile.dataset.index = i;
-        tile.dataset.value = value;
+      function renderTiles() {
+        const container = document.getElementById("puzzle-container");
+        container.innerHTML = "";
 
-        tile.addEventListener("click", () => {
-          const currentIndex = parseInt(tile.dataset.index);
-          moveTile(currentIndex);
+        for (let i = 0; i < tiles.length; i++) {
+          const value = tiles[i];
+          if (value === null) continue;
+
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.textContent = "";
+          const bgRow = Math.floor((value - 1) / size);
+          const bgCol = (value - 1) % size;
+          tile.style.backgroundPosition = `${-bgCol * tileSize}px ${
+            -bgRow * tileSize
+          }px`;
+
+          tile.dataset.index = i;
+          tile.dataset.value = value;
+
+          tile.addEventListener("click", () => {
+            const currentIndex = parseInt(tile.dataset.index);
+            moveTile(currentIndex);
+          });
+
+          document.getElementById("puzzle-container").appendChild(tile);
+        }
+
+        updatePositions();
+        isPlaying = true;
+      }
+
+      function updatePositions() {
+        const tilesDom = document.querySelectorAll(".tile");
+        tilesDom.forEach((tile) => {
+          const index = tiles.indexOf(parseInt(tile.dataset.value));
+          tile.dataset.index = index;
+          const row = Math.floor(index / size);
+          const col = index % size;
+          const x = col * (tileSize + gap);
+          const y = row * (tileSize + gap);
+          tile.style.transform = `translate(${x}px, ${y}px)`;
+        });
+      }
+
+      function getMovableIndexes() {
+        const emptyRow = Math.floor(emptyIndex / size);
+        const emptyCol = emptyIndex % size;
+
+        const directions = [
+          { r: -1, c: 0 },
+          { r: 1, c: 0 },
+          { r: 0, c: -1 },
+          { r: 0, c: 1 },
+        ];
+
+        const indexes = [];
+
+        directions.forEach((d) => {
+          const newRow = emptyRow + d.r;
+          const newCol = emptyCol + d.c;
+          if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+            indexes.push(newRow * size + newCol);
+          }
         });
 
-        document.getElementById("puzzle-container").appendChild(tile);
+        return indexes;
       }
 
-      updatePositions();
-      isPlaying = true;
-    }
+      function moveTile(index, isShuffling = false) {
+        if (!isReady && !isShuffling) return; // <--- blokir saat belum mulai
+        if (!getMovableIndexes().includes(index)) return;
 
-    function updatePositions() {
-      const tilesDom = document.querySelectorAll(".tile");
-      tilesDom.forEach(tile => {
-        const index = tiles.indexOf(parseInt(tile.dataset.value));
-        tile.dataset.index = index;
-        const row = Math.floor(index / size);
-        const col = index % size;
-        const x = col * (tileSize + gap);
-        const y = row * (tileSize + gap);
-        tile.style.transform = `translate(${x}px, ${y}px)`;
-      });
-    }
+        [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+        emptyIndex = index;
+        updatePositions();
 
-    function getMovableIndexes() {
-      const emptyRow = Math.floor(emptyIndex / size);
-      const emptyCol = emptyIndex % size;
-
-      const directions = [
-        { r: -1, c: 0 },
-        { r: 1, c: 0 },
-        { r: 0, c: -1 },
-        { r: 0, c: 1 }
-      ];
-
-      const indexes = [];
-
-      directions.forEach(d => {
-        const newRow = emptyRow + d.r;
-        const newCol = emptyCol + d.c;
-        if (
-          newRow >= 0 && newRow < size &&
-          newCol >= 0 && newCol < size
-        ) {
-          indexes.push(newRow * size + newCol);
+        if (!isShuffling && isPlaying) {
+          checkSolved();
         }
-      });
-
-      return indexes;
-    }
-
-    function moveTile(index, isShuffling = false) {
-      if (!getMovableIndexes().includes(index)) return;
-
-      // swap tile dan kosong
-      [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
-      emptyIndex = index;
-      updatePositions();
-
-      if (!isShuffling && isPlaying) {
-        checkSolved();
       }
-    }
 
-    function checkSolved() {
-      const correct = Array.from({ length: total - 1 }, (_, i) => i + 1).concat(null);
-      const isSolved = tiles.every((val, i) => val === correct[i]);
-      if (isSolved) {
-        clearInterval(timerInterval);
-        isPlaying = false;
-        document.getElementById("restartBtn").style.display = "inline-block";
-        setTimeout(() => alert(`🎉 Puzzle selesai dalam ${seconds} detik!`), 300);
+      function checkSolved() {
+        const correct = Array.from(
+          { length: total - 1 },
+          (_, i) => i + 1
+        ).concat(null);
+        const isSolved = tiles.every((val, i) => val === correct[i]);
+        if (isSolved) {
+          clearInterval(timerInterval);
+          isPlaying = false;
+          document.getElementById("restartBtn").style.display = "inline-block";
+          setTimeout(
+            () => alert(`🎉 Puzzle selesai dalam ${seconds} detik!`),
+            300
+          );
+        }
       }
-    }
 
-    initTiles();
-    renderTiles();
-  </script>
-
-</body>
+      initTiles();
+      renderTiles();
+    </script>
+  </body>
 </html>
