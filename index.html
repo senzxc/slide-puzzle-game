@@ -1,105 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sliding Puzzle</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 40px;
-    }
-    #puzzle {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 2px;
-      margin: 20px auto;
-      width: max-content;
-    }
-    .tile {
-      width: 100px;
-      height: 100px;
-      background-color: #4da6ff;
-      color: white;
-      font-size: 32px;
-      line-height: 100px;
-      cursor: pointer;
-      user-select: none;
-      border-radius: 5px;
-    }
-    .empty {
-      background-color: #ccc;
-      cursor: default;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-    }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sliding Puzzle Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 40px;
+      }
 
-  <h1>Sliding Puzzle</h1>
-  <button onclick="shuffle()">Shuffle</button>
-  aowkoawko
-  <div id="puzzle"></div>
+      #puzzle {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        gap: 2px;
+        margin: 20px auto;
+      }
 
-  <script>
-    const size = 3; // 3x3 grid
-    let tiles = [];
+      .tile {
+        width: 100px;
+        height: 100px;
+        background-image: url("mika.jpg"); /* ganti ke gambar kamu */
+        background-size: 300px 300px;
+        background-repeat: no-repeat;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-    function init() {
-      tiles = Array.from({ length: size * size - 1 }, (_, i) => (i + 1).toString());
-      tiles.push(""); // Empty space
-      render();
-    }
+      .empty {
+        background: #ccc;
+        cursor: default;
+      }
 
-    function render() {
-      const puzzle = document.getElementById("puzzle");
-      puzzle.innerHTML = "";
-      tiles.forEach((tile, index) => {
-        const div = document.createElement("div");
-        div.className = "tile";
-        if (tile === "") {
-          div.classList.add("empty");
-        } else {
-          div.textContent = tile;
-          div.addEventListener("click", () => moveTile(index));
-        }
-        puzzle.appendChild(div);
-      });
-    }
+      button {
+        padding: 10px 20px;
+        margin: 10px;
+      }
 
-    function moveTile(index) {
-      const emptyIndex = tiles.indexOf("");
-      const valid = isValidMove(index, emptyIndex);
+      #stopwatch {
+        font-size: 20px;
+        margin-top: 10px;
+      }
 
-      if (valid) {
-        [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+      #restartBtn {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sliding Puzzle</h1>
+    <button id="startBtn" onclick="startGame()">Mulai</button>
+    <button id="restartBtn" onclick="restartGame()">Ulangi</button>
+    <div id="stopwatch">Waktu: 0 detik</div>
+
+    <div id="puzzle"></div>
+
+    <script>
+      const size = 3;
+      let isPlaying = false;
+      let tiles = [];
+      let timerInterval;
+      let seconds = 0;
+
+      function init() {
+        tiles = Array.from({ length: size * size - 1 }, (_, i) =>
+          (i + 1).toString()
+        );
+        tiles.push(""); // space kosong
         render();
       }
-    }
 
-    function isValidMove(tileIndex, emptyIndex) {
-      const row1 = Math.floor(tileIndex / size);
-      const col1 = tileIndex % size;
-      const row2 = Math.floor(emptyIndex / size);
-      const col2 = emptyIndex % size;
+      function render() {
+        const puzzle = document.getElementById("puzzle");
+        puzzle.innerHTML = "";
 
-      return (Math.abs(row1 - row2) + Math.abs(col1 - col2)) === 1;
-    }
+        tiles.forEach((tile, index) => {
+          const div = document.createElement("div");
+          div.className = "tile";
 
-    function shuffle() {
-      for (let i = tiles.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+          if (tile === "") {
+            div.classList.add("empty");
+            div.style.backgroundImage = "none";
+          } else {
+            const row = Math.floor((tile - 1) / size);
+            const col = (tile - 1) % size;
+            div.style.backgroundPosition = `${-col * 100}px ${-row * 100}px`;
+            div.addEventListener("click", () => moveTile(index));
+          }
+
+          puzzle.appendChild(div);
+        });
       }
-      render();
-    }
 
-    init();
-  </script>
+      function moveTile(index) {
+        const emptyIndex = tiles.indexOf("");
+        const valid = isValidMove(index, emptyIndex);
 
-</body>
+        if (valid) {
+          [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+          render();
+
+          if (isPlaying) {
+            checkSolved();
+          }
+        }
+      }
+
+      function isValidMove(tileIndex, emptyIndex) {
+        const row1 = Math.floor(tileIndex / size);
+        const col1 = tileIndex % size;
+        const row2 = Math.floor(emptyIndex / size);
+        const col2 = emptyIndex % size;
+
+        return Math.abs(row1 - row2) + Math.abs(col1 - col2) === 1;
+      }
+
+      function shuffle(times = 100) {
+        for (let i = 0; i < times; i++) {
+          const movable = getMovableTiles();
+          const randIndex = movable[Math.floor(Math.random() * movable.length)];
+          moveTile(randIndex);
+        }
+      }
+
+      function getMovableTiles() {
+        const emptyIndex = tiles.indexOf("");
+        const directions = [-1, 1, -size, size];
+        return directions
+          .map((d) => emptyIndex + d)
+          .filter(
+            (i) => i >= 0 && i < size * size && isValidMove(i, emptyIndex)
+          );
+      }
+
+      function startGame() {
+        init();
+        isPlaying = false; // sementara nonaktifkan
+        shuffle(100); // acak puzzle dulu
+        isPlaying = true; // aktifkan setelah shuffle selesai
+
+        seconds = 0;
+        updateStopwatch();
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          seconds++;
+          updateStopwatch();
+        }, 1000);
+
+        document.getElementById("startBtn").style.display = "none";
+        document.getElementById("restartBtn").style.display = "none";
+      }
+
+      function restartGame() {
+        startGame();
+      }
+
+      function updateStopwatch() {
+        document.getElementById(
+          "stopwatch"
+        ).textContent = `Waktu: ${seconds} detik`;
+      }
+
+      function checkSolved() {
+        const correctTiles = Array.from({ length: size * size - 1 }, (_, i) =>
+          (i + 1).toString()
+        ).concat("");
+        if (JSON.stringify(tiles) === JSON.stringify(correctTiles)) {
+          clearInterval(timerInterval);
+          document.getElementById("restartBtn").style.display = "inline-block";
+          alert(`Selamat! Puzzle selesai dalam ${seconds} detik 🎉`);
+        }
+      }
+
+      // tampilkan puzzle benar saat awal
+      init();
+    </script>
+  </body>
 </html>
