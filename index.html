@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sliding Puzzle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+    #puzzle {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+      margin: 20px auto;
+      width: max-content;
+    }
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-color: #4da6ff;
+      color: white;
+      font-size: 32px;
+      line-height: 100px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 5px;
+    }
+    .empty {
+      background-color: #ccc;
+      cursor: default;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sliding Puzzle</h1>
+  <button onclick="shuffle()">Shuffle</button>
+  <div id="puzzle"></div>
+
+  <script>
+    const size = 3; // 3x3 grid
+    let tiles = [];
+
+    function init() {
+      tiles = Array.from({ length: size * size - 1 }, (_, i) => (i + 1).toString());
+      tiles.push(""); // Empty space
+      render();
+    }
+
+    function render() {
+      const puzzle = document.getElementById("puzzle");
+      puzzle.innerHTML = "";
+      tiles.forEach((tile, index) => {
+        const div = document.createElement("div");
+        div.className = "tile";
+        if (tile === "") {
+          div.classList.add("empty");
+        } else {
+          div.textContent = tile;
+          div.addEventListener("click", () => moveTile(index));
+        }
+        puzzle.appendChild(div);
+      });
+    }
+
+    function moveTile(index) {
+      const emptyIndex = tiles.indexOf("");
+      const valid = isValidMove(index, emptyIndex);
+
+      if (valid) {
+        [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+        render();
+      }
+    }
+
+    function isValidMove(tileIndex, emptyIndex) {
+      const row1 = Math.floor(tileIndex / size);
+      const col1 = tileIndex % size;
+      const row2 = Math.floor(emptyIndex / size);
+      const col2 = emptyIndex % size;
+
+      return (Math.abs(row1 - row2) + Math.abs(col1 - col2)) === 1;
+    }
+
+    function shuffle() {
+      for (let i = tiles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+      }
+      render();
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
