@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
     <title>Puzzle Geser Asli</title>
     <style>
+      html,
+      body {
+        touch-action: manipulation;
+      }
+
       body {
         font-family: Arial, sans-serif;
         text-align: center;
         margin-top: 40px;
+        background-color: #121212;
+      }
+
+      h1 {
+        color: #ffffff;
+        font-size: 24px;
+      }
+      button {
+        background-color: #333;
+        border: 2px solid #5a5a5a;
+        color: #ffffff;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #444;
+      }
+      #stopwatch {
+        color: #ffffff;
       }
 
       #puzzle-container {
@@ -15,7 +43,7 @@
         width: 312px; /* 3 x (100 + 4) - 4 */
         height: 312px;
         margin: 20px auto;
-        border: 2px solid #ccc;
+        border: 2px solid #5a5a5a;
       }
 
       .tile {
@@ -29,6 +57,7 @@
         cursor: pointer;
         transition: transform 0.25s ease;
         will-change: transform;
+        -webkit-tap-highlight-color: transparent;
       }
 
       button {
@@ -47,10 +76,22 @@
     </style>
   </head>
   <body>
-    <h1>Puzzle Geser Satu Arah</h1>
+    <h1>Puzzle Gambar 3x3</h1>
     <button id="startBtn" onclick="startGame()">Mulai</button>
     <button id="restartBtn" onclick="restartGame()">Ulangi</button>
-    <div id="stopwatch">Waktu: 0 detik</div>
+    <button id="resetBtn" onclick="resetToInitial()" style="display: none">
+      Reset
+    </button>
+    <div id="stopwatch" style="display: none;">Waktu: 0 detik</div>
+    <div
+      id="countdown"
+      style="
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 10px;
+        color: #ffffff;
+      "
+    ></div>
 
     <div id="puzzle-container"></div>
 
@@ -65,26 +106,60 @@
       let timerInterval;
       let seconds = 0;
       let isReady = false;
+      let initialTiles = [];
+      let countdownTimeout;
 
       function startGame() {
-        initTiles();
-        shuffleTiles();
+        initTiles(); // posisi benar
         renderTiles();
-        isReady = true; // aktifkan puzzle
-        seconds = 0;
-        updateStopwatch();
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-          seconds++;
-          updateStopwatch();
-        }, 1000);
-
+        isReady = false;
+        isPlaying = false;
+        document.getElementById("resetBtn").style.display = "none";
         document.getElementById("startBtn").style.display = "none";
-        document.getElementById("restartBtn").style.display = "none";
+
+        document.getElementById("countdown").textContent = "Mulai dalam 3...";
+        let countdown = 3;
+
+        const countdownInterval = setInterval(() => {
+          countdown--;
+          if (countdown > 0) {
+            document.getElementById(
+              "countdown"
+            ).textContent = `Mulai dalam ${countdown}...`;
+          } else {
+            clearInterval(countdownInterval);
+            document.getElementById("countdown").textContent = "";
+            shuffleTiles();
+            renderTiles();
+            isReady = true;
+            isPlaying = true;
+            seconds = 0;
+            updateStopwatch();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+              seconds++;
+              updateStopwatch();
+            }, 1000);
+            document.getElementById("stopwatch").style.display = "inline-block";
+            document.getElementById("startBtn").style.display = "none";
+            document.getElementById("restartBtn").style.display = "none";
+          }
+        }, 1000);
       }
 
-      function restartGame() {
-        startGame();
+      function resetToInitial() {
+        initTiles(); // posisi benar
+        renderTiles();
+        clearInterval(timerInterval);
+        seconds = 0;
+        updateStopwatch();
+        isReady = false;
+        isPlaying = false;
+
+        document.getElementById("startBtn").style.display = "inline-block";
+        document.getElementById("restartBtn").style.display = "none";
+        document.getElementById("resetBtn").style.display = "none";
+        document.getElementById("countdown").textContent = "";
       }
 
       function updateStopwatch() {
@@ -98,8 +173,9 @@
         for (let i = 0; i < total - 1; i++) {
           tiles.push(i + 1);
         }
-        tiles.push(null); // posisi kosong
+        tiles.push(null);
         emptyIndex = total - 1;
+        initialTiles = [...tiles]; // simpan versi benar
       }
 
       function shuffleTiles(times = 100) {
