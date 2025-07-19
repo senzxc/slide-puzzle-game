@@ -192,6 +192,10 @@ button {
   color: #ffffff;
 }
 
+#leaderboard-list span {
+  color: lawngreen;
+}
+
 thead {
   background-color: #444;
 }

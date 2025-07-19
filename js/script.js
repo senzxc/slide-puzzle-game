@@ -263,9 +263,7 @@ function fetchLeaderboard() {
       const list = data
         .map(
           (p, i) =>
-            `<tr><td>${i + 1}</td><td>${p.name}</td><td>${
-              p.time
-            } detik</td></tr>`
+            `<tr><td>${i + 1}</td><td>${p.name}</td><td><span>${p.time} detik</span></td></tr>`
         )
         .join("");
       document.getElementById("leaderboard-list").innerHTML = list;
