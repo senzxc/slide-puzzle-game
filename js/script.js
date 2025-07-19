@@ -107,6 +107,8 @@ function resetToInitial() {
   document.getElementById("creator").style.display = "inline-block";
   document.getElementById("puzzle-container").style.display = "none";
   document.getElementById("leaderboard").style.display = "none";
+  document.getElementById("leaderboardBtn").style.display = "inline-block";
+  document.getElementById("submit-score").style.display = "none";
 }
 
 function updateStopwatch() {
