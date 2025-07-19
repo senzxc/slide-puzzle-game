@@ -70,7 +70,7 @@ button:hover {
   -webkit-tap-highlight-color: transparent;
 }
 
-h3 {
+#menu-title {
   display: none;
   color: #ffffff;
   font-size: 20px;
@@ -161,6 +161,43 @@ button {
   font-weight: bold;
   margin-top: 10px;
   color: #ffffff;
+}
+
+#submit-score {
+  display: none;
+  margin-top: 10px;
+}
+
+#submit-score input {
+  padding: 10px 15px;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+#submit-score input:focus {
+  box-shadow: 0 0 30px 10px rgba(136, 136, 136, 0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+#leaderboard {
+  display: none;
+  color: #ffffff;
+}
+
+#leaderboard h3 {
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+thead {
+  background-color: #444;
+}
+
+tr:nth-child(even) {
+  background-color: #2b2b2b;
 }
 
 @media (max-width: 600px) {

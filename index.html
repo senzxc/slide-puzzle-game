@@ -10,13 +10,18 @@
       content="https://senzxc.github.io/slide-puzzle-game/assets/mika.jpg"
     />
     <title>Puzzle Game</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <img id="icon" src="assets/carlotta.png" />
     <h1 id="title">Puzzle Gambar 3x3</h1>
     <h2 id="creator">Created by senzxc</h2>
-    <button id="startBtn" onclick="selectImg()">Mulai</button>
+    <div id="play-group">
+      <button id="startBtn" onclick="selectImg()">Mulai</button>
+      <button id="leaderboardBtn" onclick="showLeaderboard()">
+        Leaderboard
+      </button>
+    </div>
     <button id="resetBtn" onclick="resetToInitial()">Reset</button>
     <div id="stopwatch">Waktu: 0 detik</div>
     <div id="countdown"></div>
@@ -50,6 +55,26 @@
     <button id="backBtn" onclick="goBack()">Kembali</button>
 
     <div id="win-text"></div>
+
+    <div id="submit-score">
+      <input type="text" id="playerName" placeholder="Nama kamu" />
+      <button onclick="submitScore()">Kirim Skor</button>
+    </div>
+
+    <div id="leaderboard">
+      <h3 id="leaderboard-title">🏆 Leaderboard:</h3>
+      <table cellspacing="0" cellpadding="15">
+        <thead>
+          <tr>
+            <th>Posisi</th>
+            <th>Nama</th>
+            <th>Waktu</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-list">
+        </tbody>
+      </table>
+    </div>
 
     <script src="js/script.js"></script>
   </body>
