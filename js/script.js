@@ -19,6 +19,7 @@ let countdownTimeout;
 function selectImg() {
   const menu = document.querySelector("#menu");
   menu.style.display = "flex";
+  document.getElementById("menu-wrapper").style.display = "block";
   document.getElementById("startBtn").style.display = "none";
   document.getElementById("icon").style.display = "none";
   document.getElementById("title").style.display = "none";
@@ -30,6 +31,7 @@ function selectImg() {
 }
 
 function goBack() {
+  document.querySelector("#menu-wrapper").style.display = "none";
   document.querySelector("#menu").style.display = "none";
   document.getElementById("startBtn").style.display = "inline-block";
   document.getElementById("icon").style.display = "inline-block";
@@ -108,6 +110,7 @@ function resetToInitial() {
   document.getElementById("puzzle-container").style.display = "none";
   document.getElementById("leaderboard").style.display = "none";
   document.getElementById("leaderboardBtn").style.display = "inline-block";
+  document.getElementById("menu-wrapper").style.display = "none";
   document.getElementById("submit-score").style.display = "none";
 }
 
@@ -243,7 +246,7 @@ function submitScore() {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name: name, time: seconds }),
+    body: JSON.stringify({ name: name, time: seconds, image: selectedImage }),
   })
     .then((res) => res.json())
     .then((data) => {
@@ -251,19 +254,19 @@ function submitScore() {
       fetchLeaderboard(); // panggil leaderboard setelah submit
     })
     .catch((err) => {
-      alert("Berhasil submit skor!");
+      alert("Gagal submit skor :(");
       console.error(err);
     });
 }
 
 function fetchLeaderboard() {
-  fetch(API_URL + "?sortBy=time&order=asc") // urut berdasarkan waktu tercepat
+  fetch(API_URL + "?sortBy=time&order=asc")
     .then((res) => res.json())
     .then((data) => {
       const list = data
         .map(
           (p, i) =>
-            `<tr><td>${i + 1}</td><td>${p.name}</td><td><span>${p.time} detik</span></td></tr>`
+            `<tr><td>${i + 1}</td><td>${p.name}</td><td><img src="${p.image}" alt="${p.name}" class="leaderboard-image" /></td><td><span>${p.time} detik</span></td></tr>`
         )
         .join("");
       document.getElementById("leaderboard-list").innerHTML = list;
