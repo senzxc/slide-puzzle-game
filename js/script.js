@@ -57,6 +57,7 @@ function startGame() {
   document.getElementById("menu-title").style.display = "none";
   document.getElementById("menu").style.display = "none";
   document.getElementById("backBtn").style.display = "none";
+  document.getElementById("menu-wrapper").style.display = "none";
   document.getElementById("puzzle-container").style.display = "inline-block";
 
   document.getElementById("countdown").textContent = "Mulai dalam 3...";
