@@ -175,6 +175,25 @@
         margin-top: 10px;
         color: #ffffff;
       }
+
+      @media (max-width: 600px) {
+        body {
+          height: 90vh;
+          margin-top: 20px;
+        }
+
+        #menu span {
+          display: block;
+          transform: translateY(0);
+          font-size: 14px;
+          margin-top: 15px;
+        }
+
+        #menu a span {
+          transform: translateY(1);
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -269,7 +288,8 @@
         document.getElementById("menu-title").style.display = "none";
         document.getElementById("menu").style.display = "none";
         document.getElementById("backBtn").style.display = "none";
-        document.getElementById("puzzle-container").style.display = "inline-block";
+        document.getElementById("puzzle-container").style.display =
+          "inline-block";
 
         document.getElementById("countdown").textContent = "Mulai dalam 3...";
         let countdown = 3;
