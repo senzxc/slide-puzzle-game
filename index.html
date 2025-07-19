@@ -13,95 +13,102 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <!-- <img id="icon" src="assets/carlotta.png" />
-    <h1 id="title">Puzzle Gambar 3x3</h1>
-    <h2 id="creator">Created by senzxc</h2>
-    <div id="play-group">
-      <button id="startBtn" onclick="selectImg()">Mulai</button>
-      <button id="leaderboardBtn" onclick="showLeaderboard()">
-        Leaderboard
-      </button>
+    <div id="wrapper">
+      <img id="icon" src="assets/carlotta.png" />
+      <h1 id="title">Puzzle Gambar 3x3</h1>
+      <h2 id="creator">Created by senzxc</h2>
+      <div id="play-group">
+        <button id="startBtn" onclick="selectImg()">Mulai</button>
+        <button id="leaderboardBtn" onclick="showLeaderboard()">
+          Leaderboard
+        </button>
+      </div>
+      <button id="resetBtn" onclick="resetToInitial()">Reset</button>
+      <div id="stopwatch">Waktu: 0 detik</div>
+      <div id="countdown"></div>
+
+      <div id="puzzle-container"></div>
+
+      <div id="menu-wrapper">
+        <h3 id="menu-title">Pilih Gambar</h3>
+
+        <div id="menu">
+          <a href="" data-image="assets/mika.jpg">
+            <img src="assets/mika-preview.png" alt="Mika Preview" />
+            <span>Mika</span>
+          </a>
+
+          <a href="" data-image="assets/hutao.jpeg">
+            <img src="assets/hutao-preview.png" alt="Hutao Preview" />
+            <span>Hutao</span>
+          </a>
+
+          <a href="" data-image="assets/phrolova.jpg">
+            <img src="assets/phrolova-preview.png" alt="Phrolova Preview" />
+            <span>Phrolova</span>
+          </a>
+
+          <a href="" data-image="assets/mujica.png">
+            <img src="assets/mujica-preview.png" alt="Mujica Preview" />
+            <span>Mujica</span>
+          </a>
+
+          <a href="" data-image="assets/mujica2.jpg">
+            <img
+              src="assets/mujica2-preview.png"
+              alt="Mujica Depresi Preview"
+            />
+            <span>Mujica Depresot</span>
+          </a>
+
+          <a href="" data-image="assets/ino lampu hazard.jpg">
+            <img src="assets/ino-preview.png" alt="Ino Preview" />
+            <span>Ino Lampu Hazard</span>
+          </a>
+
+          <a href="" data-image="assets/ino kripto.jpg">
+            <img src="assets/ino-kripto-preview.png" alt="Ino Kripto Preview" />
+            <span>Ino Kripto</span>
+          </a>
+
+          <a href="" data-image="assets/white.jpg">
+            <img src="assets/white-preview.png" alt="White Preview" />
+            <span>Putih (anomali💀)</span>
+          </a>
+        </div>
+
+        <button id="backBtn" onclick="goBack()">Kembali</button>
+      </div>
+
+      <div id="win-text"></div>
+
+      <div id="submit-score">
+        <input type="text" id="playerName" placeholder="Nama kamu" />
+        <button onclick="submitScore()">Kirim Skor</button>
+      </div>
+
+      <div id="leaderboard">
+        <h3 id="leaderboard-title">🏆 Leaderboard:</h3>
+        <table cellspacing="0" cellpadding="15">
+          <thead>
+            <tr>
+              <th>Posisi</th>
+              <th>Nama</th>
+              <th>Gambar</th>
+              <th>Waktu</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-list"></tbody>
+        </table>
+      </div>
     </div>
-    <button id="resetBtn" onclick="resetToInitial()">Reset</button>
-    <div id="stopwatch">Waktu: 0 detik</div>
-    <div id="countdown"></div>
 
-    <div id="puzzle-container"></div>
-
-    <h3 id="menu-title">Pilih Gambar</h3>
-
-    <div id="menu">
-      <a href="" data-image="assets/mika.jpg">
-        <img src="assets/mika-preview.png" alt="Mika Preview" />
-        <span>Mika</span>
-      </a>
-
-      <a href="" data-image="assets/hutao.jpeg">
-        <img src="assets/hutao-preview.png" alt="Hutao Preview" />
-        <span>Hutao</span>
-      </a>
-
-      <a href="" data-image="assets/phrolova.jpg">
-        <img src="assets/phrolova-preview.png" alt="Phrolova Preview" />
-        <span>Phrolova</span>
-      </a>
-
-      <a href="" data-image="assets/mujica.png">
-        <img src="assets/mujica-preview.png" alt="Mujica Preview" />
-        <span>Mujica</span>
-      </a>
-
-      <a href="" data-image="assets/mujica2.jpg">
-        <img src="assets/mujica2-preview.png" alt="Mujica Depresi Preview" />
-        <span>Mujica Depresot</span>
-      </a>
-
-      <a href="" data-image="assets/ino lampu hazard.jpg">
-        <img src="assets/ino-preview.png" alt="Ino Preview" />
-        <span>Ino Lampu Hazard</span>
-      </a>
-
-      <a href="" data-image="assets/ino kripto.jpg">
-        <img src="assets/ino-kripto-preview.png" alt="Ino Kripto Preview" />
-        <span>Ino Kripto</span>
-      </a>
-
-      <a href="" data-image="assets/white.jpg">
-        <img src="assets/white-preview.png" alt="White Preview" />
-        <span>Putih (anomali💀)</span>
-      </a>
-    </div>
-
-    <button id="backBtn" onclick="goBack()">Kembali</button>
-
-    <div id="win-text"></div>
-
-    <div id="submit-score">
-      <input type="text" id="playerName" placeholder="Nama kamu" />
-      <button onclick="submitScore()">Kirim Skor</button>
-    </div>
-
-    <div id="leaderboard">
-      <h3 id="leaderboard-title">🏆 Leaderboard:</h3>
-      <table cellspacing="0" cellpadding="15">
-        <thead>
-          <tr>
-            <th>Posisi</th>
-            <th>Nama</th>
-            <th>Waktu</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-list">
-        </tbody>
-      </table>
-    </div> -->
-
-    <div class="maintenance">
+    <!-- <div class="maintenance">
       <img src="assets/maintenance.jpg" />
       <h1>Maintenance</h1>
       <p>Sedikit fix bug visual dawgg dan ada update sistem</p>
       <p>Nanti gw kabarin lewat story wangsaf.</p>
-    </div>
+    </div> -->
 
     <script src="js/script.js"></script>
   </body>
