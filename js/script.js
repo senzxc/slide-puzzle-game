@@ -1,3 +1,6 @@
+const API_URL =
+  "https://687afd0dabb83744b7ee6f2e.mockapi.io/leaderboard/player";
+
 selectedImage = localStorage.getItem("selectedImage") || "assets/mika.jpg";
 
 const size = 3;
@@ -22,6 +25,8 @@ function selectImg() {
   document.getElementById("creator").style.display = "none";
   document.getElementById("menu-title").style.display = "block";
   document.getElementById("backBtn").style.display = "inline-block";
+  document.querySelector("#leaderboard").style.display = "none";
+  document.querySelector("#leaderboardBtn").style.display = "none";
 }
 
 function goBack() {
@@ -30,6 +35,7 @@ function goBack() {
   document.getElementById("icon").style.display = "inline-block";
   document.getElementById("title").style.display = "inline-block";
   document.getElementById("creator").style.display = "inline-block";
+  document.getElementById("leaderboardBtn").style.display = "inline-block";
   document.getElementById("menu-title").style.display = "none";
   document.getElementById("backBtn").style.display = "none";
 }
@@ -100,6 +106,7 @@ function resetToInitial() {
   document.getElementById("icon").style.display = "inline-block";
   document.getElementById("creator").style.display = "inline-block";
   document.getElementById("puzzle-container").style.display = "none";
+  document.getElementById("leaderboard").style.display = "none";
 }
 
 function updateStopwatch() {
@@ -218,7 +225,56 @@ function checkSolved() {
     document.getElementById("win-text").textContent =
       "🎉 Puzzle selesai dalam " + seconds + " detik!";
     document.getElementById("win-text").style.display = "block";
+    document.getElementById("submit-score").style.display = "block";
   }
+}
+
+function submitScore() {
+  const name = document.getElementById("playerName").value;
+  if (!name) {
+    alert("Isi nama dulu ya!");
+    return;
+  }
+
+  fetch("https://687afd0dabb83744b7ee6f2e.mockapi.io/leaderboard/player", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: name, time: seconds }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      document.getElementById("submit-score").style.display = "none";
+      fetchLeaderboard(); // panggil leaderboard setelah submit
+    })
+    .catch((err) => {
+      alert("Berhasil submit skor!");
+      console.error(err);
+    });
+}
+
+function fetchLeaderboard() {
+  fetch(API_URL + "?sortBy=time&order=asc") // urut berdasarkan waktu tercepat
+    .then((res) => res.json())
+    .then((data) => {
+      const list = data
+        .map(
+          (p, i) =>
+            `<tr><td>${i + 1}</td><td>${p.name}</td><td>${
+              p.time
+            } detik</td></tr>`
+        )
+        .join("");
+      document.getElementById("leaderboard-list").innerHTML = list;
+      document.getElementById("leaderboard").style.display = "block";
+    });
+}
+
+function showLeaderboard() {
+  document.getElementById("leaderboard").style.display = "block";
+  document.getElementById("leaderboard-title").style.display = "block";
+  fetchLeaderboard();
 }
 
 document.querySelectorAll("#menu a").forEach((link) => {
