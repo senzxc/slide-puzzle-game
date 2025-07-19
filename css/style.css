@@ -16,6 +16,30 @@ body {
   /* overflow: hidden; */
 }
 
+.maintenance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.maintenance img {
+  width: 150px;
+  height: auto;
+  margin-bottom: -10px;
+}
+
+.maintenance h1 {
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+}
+
+.maintenance p {
+  font-size: 0.9rem;
+  margin-bottom: -10px;
+}
+
 #icon {
   width: 250px;
   margin-bottom: 20px;
